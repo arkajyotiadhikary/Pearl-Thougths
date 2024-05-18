@@ -7,7 +7,7 @@
       "scripts": {
             "start": "node dist/app.js",
             "test": "jest",
-            "build": "tsc -p ."
+            "build": "tsc -p tsconfig.json"
       },
       "author": "",
       "license": "ISC",
