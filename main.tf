@@ -36,4 +36,14 @@ resource "aws_ecs_task_definition" "my_app" {
 
 resource "aws_ecs_service" "my_app" {
   name            = "my-app-service"
+  cluster         = aws_ecs_cluster.my_app_cluster.id
+  task_definition = aws_ecs_task_definition.my_app.arn
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = ["subnet-0dbcc75f8ab359175"] 
+    security_groups = ["sg-01c0dead894195c58"] 
+  }
+
+  desired_count = 1
 }
