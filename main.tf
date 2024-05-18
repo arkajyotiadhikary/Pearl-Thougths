@@ -40,7 +40,7 @@ resource "aws_ecs_task_definition" "my_app" {
 
   container_definitions = jsonencode([{
     name      = "my-app"
-    image     = "arkainit/pearl:latest"
+    image     = "${aws_ecr_repository.my_app.repository_url}:latest"
     essential = true
     portMappings = [{
       containerPort = 8000
