@@ -2,31 +2,19 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-resource "aws_ecr_repository" "my_app" {
-  name = "my-app-repo"
+# Reference existing ECR repository
+data "aws_ecr_repository" "my_app" {
+  name = "my-app-repo"  # Replace with the name of your existing ECR repository
 }
 
-resource "aws_iam_role" "ecs_task_execution" {
-  name = "pearl-xyz"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
-      Principal = {
-        Service = "ecs-tasks.amazonaws.com"
-      }
-    }]
-  })
-
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
-  ]
+# Reference existing IAM role
+data "aws_iam_role" "ecs_task_execution" {
+  name = "pearl-xyz"  # Replace with the name of your existing IAM role
 }
 
-resource "aws_ecs_cluster" "my_app_cluster" {
-  name = "my-app-cluster"
+# Reference existing ECS cluster
+data "aws_ecs_cluster" "my_app_cluster" {
+  cluster_name = "my-app-cluster"  # Replace with the name of your existing ECS cluster
 }
 
 resource "aws_ecs_task_definition" "my_app" {
@@ -36,11 +24,11 @@ resource "aws_ecs_task_definition" "my_app" {
   cpu                      = "256"
   memory                   = "512"
 
-  execution_role_arn = aws_iam_role.ecs_task_execution.arn
+  execution_role_arn = data.aws_iam_role.ecs_task_execution.arn
 
   container_definitions = jsonencode([{
     name      = "my-app"
-    image     = "${aws_ecr_repository.my_app.repository_url}:latest"
+    image     = "${data.aws_ecr_repository.my_app.repository_url}:latest"
     essential = true
     portMappings = [{
       containerPort = 8000
@@ -51,7 +39,7 @@ resource "aws_ecs_task_definition" "my_app" {
 
 resource "aws_ecs_service" "my_app" {
   name            = "my-app-service-yy"
-  cluster         = aws_ecs_cluster.my_app_cluster.id
+  cluster         = data.aws_ecs_cluster.my_app_cluster.id
   task_definition = aws_ecs_task_definition.my_app.arn
   launch_type     = "FARGATE"
 
