@@ -4,17 +4,17 @@ provider "aws" {
 
 # Reference existing ECR repository
 data "aws_ecr_repository" "my_app" {
-  name = "my-app-repo"  # Replace with the name of your existing ECR repository
+  name = "my-app-repo" 
 }
 
 # Reference existing IAM role
 data "aws_iam_role" "ecs_task_execution" {
-  name = "pearl-xyz"  # Replace with the name of your existing IAM role
+  name = "pearl-xyz" 
 }
 
 # Reference existing ECS cluster
 data "aws_ecs_cluster" "my_app_cluster" {
-  cluster_name = "my-app-cluster"  # Replace with the name of your existing ECS cluster
+  cluster_name = "my-app-cluster" 
 }
 
 resource "aws_ecs_task_definition" "my_app" {
@@ -44,8 +44,8 @@ resource "aws_ecs_service" "my_app" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = ["subnet-0dbcc75f8ab359175"]  # Replace with your subnet IDs
-    security_groups = ["sg-01c0dead894195c58"]  # Replace with your security group ID
+    subnets          = ["subnet-0dbcc75f8ab359175"] 
+    security_groups = ["sg-01c0dead894195c58"] 
   }
 
   desired_count = 1
