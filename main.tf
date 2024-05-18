@@ -2,12 +2,27 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-data "aws_ecr_repository" "my_app" {
+resource "aws_ecr_repository" "my_app" {
   name = "my-app-repo"
 }
 
-data "aws_iam_role" "ecs_task_execution" {
+resource "aws_iam_role" "ecs_task_execution" {
   name = "pearl-test"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      }
+    }]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+  ]
 }
 
 resource "aws_ecs_cluster" "my_app_cluster" {
@@ -21,11 +36,11 @@ resource "aws_ecs_task_definition" "my_app" {
   cpu                      = "256"
   memory                   = "512"
 
-  execution_role_arn = data.aws_iam_role.ecs_task_execution.arn
+  execution_role_arn = aws_iam_role.ecs_task_execution.arn
 
   container_definitions = jsonencode([{
     name      = "my-app"
-    image     = "${data.aws_ecr_repository.my_app.repository_url}:latest"
+    image     = "${aws_ecr_repository.my_app.repository_url}:latest"
     essential = true
     portMappings = [{
       containerPort = 8000
@@ -41,8 +56,8 @@ resource "aws_ecs_service" "my_app" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = ["subnet-0dbcc75f8ab359175"] 
-    security_groups = ["sg-01c0dead894195c58"] 
+    subnets          = ["subnet-0dbcc75f8ab359175"]  # Replace with your subnet IDs
+    security_groups = ["sg-01c0dead894195c58"]  # Replace with your security group ID
   }
 
   desired_count = 1
