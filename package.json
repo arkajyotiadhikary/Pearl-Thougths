@@ -1,0 +1,25 @@
+{
+      "name": "pearl-thougths",
+      "version": "1.0.0",
+      "description": "Design the IaC (Terraform, Aws ECS/Fargate) for Hello world Node.js app, CD pipeline using GitHub Actions",
+      "main": "index.js",
+      "type": "module",
+      "scripts": {
+            "start": "node dist/app.js",
+            "test": "jest",
+            "build": "tsc -p ."
+      },
+      "author": "",
+      "license": "ISC",
+      "dependencies": {
+            "express": "^4.19.2"
+      },
+      "devDependencies": {
+            "@types/express": "^4.17.21",
+            "@types/jest": "^29.5.12",
+            "@types/supertest": "^6.0.2",
+            "jest": "^29.7.0",
+            "supertest": "^7.0.0",
+            "ts-jest": "^29.1.2"
+      }
+}
