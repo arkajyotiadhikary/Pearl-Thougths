@@ -7,7 +7,7 @@ resource "aws_ecr_repository" "my_app" {
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
-  name = "pearl-test"
+  name = "pearl-xyz"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -30,7 +30,7 @@ resource "aws_ecs_cluster" "my_app_cluster" {
 }
 
 resource "aws_ecs_task_definition" "my_app" {
-  family                   = "my-app-task"
+  family                   = "my-app-task-yy"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "my_app" {
 }
 
 resource "aws_ecs_service" "my_app" {
-  name            = "my-app-service"
+  name            = "my-app-service-yy"
   cluster         = aws_ecs_cluster.my_app_cluster.id
   task_definition = aws_ecs_task_definition.my_app.arn
   launch_type     = "FARGATE"
